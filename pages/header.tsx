@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 
-import { Button, AppBar, Toolbar, IconButton, Typography, InputBase, Badge } from "@material-ui/core";
+import { Button, AppBar, Toolbar, IconButton, Typography, InputBase, Badge, /*Menu, MenuItem*/ } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import MailIcon from "@material-ui/icons/Mail";
@@ -8,23 +8,48 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MoreIcon from "@material-ui/icons/MoreVert";
 
+import { InputSearch } from "../widgets/widgets";
+
+import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+
 import screenWidth from "../hooks/screenWidth";
 
-import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    inputInput: {
-      transition: theme.transitions.create('width'),
-    },
-  }));
-
 export default function Header() {
-  const classes = useStyles();
-
-  const [mouseInSearch, setMouseInSearch] = useState<boolean>(false);
 
   const screen_width = screenWidth();
+
+  //const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  /*const [anchorEl, setAnchorEl] = useState<{ x: number, y: number }>({ x: undefined, y: undefined });
+
+  //const isMenuOpen = Boolean(anchorEl);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl({ x: event.currentTarget.getBoundingClientRect().x, y: event.currentTarget.getBoundingClientRect().y });
+    setIsMenuOpen(true);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    //handleMobileMenuClose();
+  };
+
+  const renderMenu = (
+    <Menu
+      //anchorEl={<p className="dsnd"></p>}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id="primary-search-account-menu"
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={() => setIsMenuOpen(false)}
+      style={{ position: "absolute", left: anchorEl.x, top: anchorEl.y }}
+    >
+      <MenuItem onClick={() => setIsMenuOpen(false)}>Profile</MenuItem>
+      <MenuItem onClick={() => setIsMenuOpen(false)}>My account</MenuItem>
+    </Menu>);*/
+
+  //const renderMenu = (<p style={{ display: "", position: "absolute", top: anchorEl.y, left: anchorEl.x }}>sbghds</p>);
 
   return (
   <>
@@ -48,43 +73,11 @@ export default function Header() {
             Material-UI
           </Typography>
 
-          <div style={{
-            position: "relative",
-            borderRadius: 4,
-            backgroundColor: mouseInSearch ? "rgba(255, 255, 255, 0.25)" : "rgba(255, 255, 255, 0.15)",
-            width: screen_width < 600 ? "100%" : "auto",
-            marginLeft: screen_width < 600 ? 0 : 24,
-            marginRight: 16,
-          }}
-            onMouseOver={() => setMouseInSearch(true)}
-            onMouseOut={() => setMouseInSearch(false)}
-          >
-            <SearchIcon style={{
-              padding: "0 16px",
-              height: "100%",
-              position: "absolute",
-              pointerEvents: "none",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }} />
-
-            <InputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              classes={{ input: classes.inputInput, }}
-              style={{
-                color: "inherit",
-                padding:"4px 4px 4px calc(1em + 32px)",
-                width: screen_width < 960 ? "100%" : "30ch",
-                //transition: { width: "300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms" }
-              }}
-            />
-          </div>
-
           <div style={{ flexGrow: 1 }} />
 
-          <div id="sectionDesktop" style={{ display: screen_width < 960 ? "none" : "flex" }}>
+          <InputSearch />
+
+          <div id="sectionDesktop" style={{ display: screen_width < 600 ? "none" : "flex" }}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
@@ -97,19 +90,27 @@ export default function Header() {
               </Badge>
             </IconButton>
 
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls="primary-search-account-menu"
-              aria-haspopup="true"
-              //onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            <Menu>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls="primary-search-account-menu"
+                aria-haspopup="true"
+                //onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <MenuButton sx={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}>
+                  <AccountCircle style={{ color: "white" }} />
+                </MenuButton>
+              </IconButton>
+              <MenuList sx={{ color: "black", boxShadow: "-3px 11px 50px -7px rgba(0,0,0,0.10)" }}>
+                <MenuItem sx={{ fontSize: "1rem", backgroundColor: "white", padding: 10, border: "none", borderTopLeftRadius: 3, borderTopRightRadius: 3 }}>Profile</MenuItem>
+                <MenuItem sx={{ fontSize: "1rem", backgroundColor: "white", padding: 10, border: "none" }}>My account</MenuItem>
+              </MenuList>
+            </Menu>
           </div>
 
-          <div id="sectionMobile" style={{ display: screen_width < 960 ? "flex" : "none" }}>
+          <div id="sectionMobile" style={{ display: screen_width < 600 ? "flex" : "none" }}>
             <IconButton
               aria-label="show more"
               aria-controls="primary-search-account-menu-mobile"
